@@ -12,7 +12,7 @@ plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "WenQuanYi Micro
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 # 设置随机种子以确保结果可复现
-np.random.seed(42)
+np.random.seed(789)
 
 # 生成测试数据
 def generate_incomplete_data(n_samples=300, n_centers=4, missing_rate=0.1):

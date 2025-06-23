@@ -24,7 +24,9 @@ class FCM:
         
         for i in range(n_samples):
             for j in range(self.n_clusters):
-                denominator = np.sum([np.linalg.norm(X[i] - self.centers[j]) ** (2/(self.m-1)) for j in range(self.n_clusters)])
+                # 添加防止除零的极小值
+                epsilon = 1e-10
+                denominator = np.sum([(np.linalg.norm(X[i] - self.centers[jk]) + epsilon) ** (2/(self.m-1)) for jk in range(self.n_clusters)])
                 u[i, j] = 1 / denominator
         return u
         
@@ -34,7 +36,12 @@ class FCM:
         for j in range(self.n_clusters):
             numerator = np.sum([(self.u[i, j] ** self.m) * X[i] for i in range(X.shape[0])], axis=0)
             denominator = np.sum([self.u[i, j] ** self.m for i in range(X.shape[0])])
-            centers[j] = numerator / denominator
+            # 处理分母为零的情况
+            epsilon = 1e-10
+            if denominator < epsilon:
+                centers[j] = self.centers[j]  # 使用之前的中心值
+            else:
+                centers[j] = numerator / denominator
         return centers
         
     def fit(self, X):
